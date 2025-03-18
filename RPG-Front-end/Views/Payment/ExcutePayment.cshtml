@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Payment Status</title>
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		body {
+			background-color: #f8f9fa;
+			font-family: 'Arial', sans-serif;
+		}
+
+		.container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
+
+		.card {
+			width: 100%;
+			max-width: 400px;
+			padding: 20px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			border-radius: 10px;
+			background-color: #ffffff;
+		}
+
+			.card h2 {
+				margin-bottom: 20px;
+				font-size: 24px;
+				color: #333333;
+			}
+
+			.card p {
+				font-size: 16px;
+				color: #555555;
+			}
+
+		.btn-primary {
+			background-color: #007bff;
+			border-color: #007bff;
+		}
+
+			.btn-primary:hover {
+				background-color: #0056b3;
+				border-color: #0056b3;
+			}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="card text-center">
+			<h2>Payment Status</h2>
+			<input type="hidden" id="paymentId" name="paymentId" value="@Model" />
+			<div id="paymentMessage" class="mb-3"></div>
+			<button id="restartGameBtn" class="btn btn-primary" style="display: none;">Restart Game</button>
+		</div>
+	</div>
+
+	@section Scripts {
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+		<script>
+			$(document).ready(function () {
+				var paymentId = $("#paymentId").val();
+
+				$.ajax({
+					url: 'http://prn-222.food/api/Payment/' + paymentId, 
+					type: 'POST',
+					contentType: 'application/json',
+					success: function (response) {
+							$("#paymentMessage").html("<p class='text-success'>Payment successful. Please restart the game!</p>");
+							$("#restartGameBtn").show().click(function () {
+								window.location.href = response;
+							});
+
+					},
+					error: function (xhr, status, error) {
+						$("#paymentMessage").html("<p class='text-danger'>Error retrieving payment information!</p>");
+					}
+				});
+			});
+		</script>
+	}
+</body>
+</html>
